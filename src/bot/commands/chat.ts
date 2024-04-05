@@ -14,7 +14,7 @@ import { NoCooldown, buttonInfo, createCommand } from "../config/setup.js";
 import { gatewayConfig } from "../index.js";
 import { OptionResolver } from "../handlers/OptionResolver.js";
 import { Environment } from "../../types/other.js";
-import { env } from "../utils/db.js";
+import { env, getCache, setCache } from "../utils/db.js";
 import { LOADING_INDICATORS } from "../../types/models/users.js";
 import { CHAT_MODELS } from "../models/index.js";
 import EventEmitter from "events";
@@ -189,6 +189,13 @@ async function buildInfo(
   }
   try {
     const event = await model.run(bot.api, data);
+    let previousMetrics: any = (await getCache("metrics_shapes")) || {
+      users: [],
+      guilds: [],
+      messages: 0,
+    };
+    previousMetrics.messages++;
+    await setCache("metrics_shapes", previousMetrics);
 
     if (!event || !(event instanceof EventEmitter)) {
       return await edit({
