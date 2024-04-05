@@ -65,7 +65,9 @@ export async function handleCommand(
   );
   let previousMetrics: any = (await getCache("metrics_shapes")) || {
     users: [],
+    usersCount: 0,
     guilds: [],
+    guildsCount: 0,
     messages: 0,
   };
   let userIsThere = previousMetrics?.users.find(
@@ -73,13 +75,18 @@ export async function handleCommand(
   );
   if (!userIsThere) {
     previousMetrics?.users.push(interaction.user.id.toString());
+    previousMetrics.usersCount++;
   }
-  let guildIsThere = previousMetrics?.guilds.find(
-    (g: string) => g === interaction.guildId.toString()
-  );
-  if (!guildIsThere) {
-    previousMetrics?.guilds.push(interaction.guildId.toString());
+  if (interaction.guildId) {
+    let guildIsThere = previousMetrics?.guilds.find(
+      (g: string) => g === interaction.guildId?.toString()
+    );
+    if (!guildIsThere) {
+      previousMetrics?.guilds.push(interaction.guildId?.toString());
+      previousMetrics.guildsCount++;
+    }
   }
+
   await setCache("metrics_shapes", previousMetrics);
   await cmd
     .interaction({ interaction, options, env: environment, premium: prem })
