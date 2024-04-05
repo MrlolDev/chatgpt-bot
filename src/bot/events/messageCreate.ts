@@ -44,7 +44,9 @@ export const messageCreate = async (message: Message, bot: Bot) => {
 
   let previousMetrics: any = (await getCache("metrics_shapes")) || {
     users: [],
+    usersCount: 0,
     guilds: [],
+    guildsCount: 0,
     messages: 0,
   };
   let userIsThere = previousMetrics?.users.find(
@@ -52,6 +54,7 @@ export const messageCreate = async (message: Message, bot: Bot) => {
   );
   if (!userIsThere) {
     previousMetrics?.users.push(message.author.id.toString());
+    previousMetrics.usersCount++;
   }
   if (message.guildId) {
     let guildIsThere = previousMetrics?.guilds.find(
@@ -59,6 +62,7 @@ export const messageCreate = async (message: Message, bot: Bot) => {
     );
     if (!guildIsThere) {
       previousMetrics?.guilds.push(message.guildId?.toString());
+      previousMetrics.guildsCount++;
     }
   }
 
