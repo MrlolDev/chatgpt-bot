@@ -69,16 +69,16 @@ export async function handleCommand(
     messages: 0,
   };
   let userIsThere = previousMetrics?.users.find(
-    (u: string) => u === interaction.user.id
+    (u: string) => u === interaction.user.id.toString()
   );
   if (!userIsThere) {
-    previousMetrics?.users.push(interaction.user.id);
+    previousMetrics?.users.push(interaction.user.id.toString());
   }
   let guildIsThere = previousMetrics?.guilds.find(
-    (g: string) => g === interaction.guildId
+    (g: string) => g === interaction.guildId.toString()
   );
   if (!guildIsThere) {
-    previousMetrics?.guilds.push(interaction.guildId);
+    previousMetrics?.guilds.push(interaction.guildId.toString());
   }
   await setCache("metrics_shapes", previousMetrics);
   await cmd

@@ -48,16 +48,16 @@ export const messageCreate = async (message: Message, bot: Bot) => {
     messages: 0,
   };
   let userIsThere = previousMetrics?.users.find(
-    (u: string) => u === message.author.id
+    (u: string) => u === message.author.id.toString()
   );
   if (!userIsThere) {
-    previousMetrics?.users.push(message.author.id);
+    previousMetrics?.users.push(message.author.id.toString());
   }
   let guildIsThere = previousMetrics?.guilds.find(
-    (g: string) => g === message.guildId
+    (g: string) => g === message.guildId.toString()
   );
   if (!guildIsThere) {
-    previousMetrics?.guilds.push(message.guildId);
+    previousMetrics?.guilds.push(message.guildId.toString());
   }
   await setCache("metrics_shapes", previousMetrics);
   await command
